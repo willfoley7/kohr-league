@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KOHR Golf Center — Indoor Simulator League 2025</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #F26722;
+    --orange-light: #FFF4EC;
+    --black: #0E0E0E;
+    --offwhite: #F5F3EE;
+    --gray: #9A9890;
+    --mid-gray: #6B6960;
+    --light-gray: #E8E5DF;
+    --card-bg: #FFFFFF;
+    --text: #1A1A1A;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--offwhite); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
+
+  header { background: var(--black); padding: 0 2rem; position: relative; overflow: hidden; }
+  .header-inner { max-width: 960px; margin: 0 auto; padding: 3rem 0 2.5rem; position: relative; z-index: 2; }
+  .header-eyebrow { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.15em; color: var(--orange); text-transform: uppercase; margin-bottom: 0.75rem; }
+  .header-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(52px, 8vw, 92px); line-height: 0.92; color: #fff; }
+  .header-title span { color: var(--orange); }
+  .header-meta { margin-top: 1.5rem; display: flex; gap: 2rem; flex-wrap: wrap; }
+  .meta-item { font-size: 12px; color: var(--gray); font-family: 'DM Mono', monospace; letter-spacing: 0.05em; }
+  .meta-item strong { color: #fff; font-weight: 500; }
+  .header-bg { position: absolute; right: -10px; top: -20px; font-family: 'Bebas Neue', sans-serif; font-size: 220px; color: rgba(255,255,255,0.03); line-height: 1; pointer-events: none; z-index: 1; user-select: none; }
+
+  main { max-width: 960px; margin: 0 auto; padding: 2rem 2rem 4rem; }
+  .section-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gray); margin-bottom: 1rem; }
+
+  /* DISCLAIMER */
+  .disclaimer {
+    background: #fff;
+    border: 1px solid var(--light-gray);
+    border-left: 3px solid var(--orange);
+    border-radius: 10px;
+    padding: 0.9rem 1.1rem;
+    margin-bottom: 2rem;
+    font-size: 13px;
+    color: var(--mid-gray);
+    line-height: 1.6;
+  }
+  .disclaimer strong { color: var(--text); font-weight: 500; }
+
+  /* TABS */
+  .tabs-wrap { margin-bottom: 2rem; }
+  .tabs { display: flex; gap: 6px; margin-bottom: 1.5rem; }
+  .tab-btn {
+    font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 7px 16px; border-radius: 8px; border: 1px solid var(--light-gray);
+    background: transparent; color: var(--gray); cursor: pointer; transition: all 0.15s;
+  }
+  .tab-btn.active { background: var(--black); color: #fff; border-color: var(--black); }
+  .tab-btn .crown { margin-right: 4px; }
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
+
+  /* PODIUM */
+  .podium-section { margin-bottom: 2.5rem; }
+  .podium { display: grid; grid-template-columns: 1fr 1.08fr 1fr; gap: 12px; align-items: end; }
+  .podium-card { background: var(--card-bg); border: 1px solid var(--light-gray); border-radius: 14px; padding: 1.25rem 1rem 1.1rem; text-align: center; position: relative; transition: transform 0.2s; }
+  .podium-card:hover { transform: translateY(-3px); }
+  .podium-card.first { border: 2px solid var(--orange); padding-top: 1.75rem; }
+  .podium-card.second { margin-bottom: 10px; }
+  .podium-card.third { margin-bottom: 20px; }
+  .winner-badge { position: absolute; top: -13px; left: 50%; transform: translateX(-50%); background: var(--orange); color: #fff; font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; padding: 3px 11px; border-radius: 20px; white-space: nowrap; }
+  .podium-place { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.12em; color: var(--gray); margin-bottom: 6px; text-transform: uppercase; }
+  .podium-card.first .podium-place { color: var(--orange); }
+  .podium-name { font-size: 14px; font-weight: 500; margin-bottom: 6px; word-break: break-word; }
+  .podium-score { font-family: 'Bebas Neue', sans-serif; font-size: 42px; color: var(--black); line-height: 1; }
+  .podium-card.first .podium-score { color: var(--orange); font-size: 52px; }
+  .podium-detail { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--gray); margin-top: 3px; }
+
+  /* TABLE */
+  .table-section { margin-bottom: 2.5rem; }
+  .table-wrap { background: var(--card-bg); border: 1px solid var(--light-gray); border-radius: 14px; overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  thead tr { background: var(--black); }
+  thead th { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray); padding: 11px 12px; text-align: left; font-weight: 400; }
+  thead th.r { text-align: right; }
+  tbody tr { border-bottom: 1px solid var(--light-gray); transition: background 0.12s; cursor: pointer; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr.data-row:hover { background: #FFF8F4; }
+  tbody tr.winner-row { background: var(--orange-light); }
+  tbody tr.winner-row:hover { background: #FFEADC; }
+  td { padding: 10px 12px; font-size: 13px; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  td.r { text-align: right; font-family: 'DM Mono', monospace; font-size: 12px; }
+  td.dim { color: #CCC; }
+  .medal { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; }
+  .m1 { background: var(--orange); color: #fff; }
+  .m2 { background: #C8C5BB; color: #3a3a3a; }
+  .m3 { background: #E8C9A0; color: #5a3a1a; }
+  .rank-plain { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--gray); }
+  .player-name { font-weight: 500; }
+  .total-big { font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: var(--black); }
+  .winner-row .total-big { color: var(--orange); }
+  .rnds-badge { display: inline-block; background: var(--light-gray); color: var(--mid-gray); font-family: 'DM Mono', monospace; font-size: 10px; padding: 2px 7px; border-radius: 20px; }
+  .chevron { font-size: 14px; color: var(--light-gray); transition: color 0.15s; }
+  tbody tr:hover .chevron { color: var(--orange); }
+
+  /* PANEL */
+  tr.panel-row { display: none; }
+  tr.panel-row.open { display: table-row; }
+  .panel-inner { padding: 14px 12px 16px; background: var(--orange-light); border-top: 2px solid var(--orange); animation: sd 0.18s ease; }
+  @keyframes sd { from { opacity:0; transform:translateY(-5px); } to { opacity:1; transform:translateY(0); } }
+  .panel-heading { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--orange); margin-bottom: 10px; }
+  .rounds-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; }
+  .round-card { background: #fff; border: 1px solid var(--light-gray); border-radius: 10px; padding: 10px 11px; }
+  .round-card.best-round { border-color: var(--orange); }
+  .round-card.no-play { opacity: 0.35; }
+  .round-course { font-size: 11px; color: var(--gray); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .round-num { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: var(--black); line-height: 1; }
+  .round-card.best-round .round-num { color: var(--orange); }
+  .round-wk { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--gray); margin-top: 1px; }
+  .best-tag { display: inline-block; background: var(--orange); color: #fff; font-family: 'DM Mono', monospace; font-size: 9px; padding: 1px 6px; border-radius: 20px; margin-top: 3px; }
+  .dnp { font-size: 10px; color: #bbb; margin-top: 2px; }
+  .panel-note { font-size: 11px; color: var(--mid-gray); margin-top: 8px; font-family: 'DM Mono', monospace; }
+
+  /* COURSES */
+  .courses-section { margin-bottom: 2rem; }
+  .courses-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+  .course-card { background: var(--card-bg); border: 1px solid var(--light-gray); border-radius: 10px; padding: 0.9rem 1rem; }
+  .course-wk { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--orange); letter-spacing: 0.1em; margin-bottom: 3px; }
+  .course-name { font-size: 13px; font-weight: 500; }
+  .course-card.final-week { border-color: var(--orange); }
+
+  footer { text-align: center; padding: 2rem; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--gray); letter-spacing: 0.05em; border-top: 1px solid var(--light-gray); }
+
+  @media (max-width: 640px) {
+    header { padding: 0 1rem; }
+    main { padding: 1.25rem 1rem 3rem; }
+    .podium { grid-template-columns: 1fr; }
+    .podium-card.second, .podium-card.third { margin-bottom: 0; }
+    .hide-mob { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-bg">KOHR</div>
+  <div class="header-inner">
+    <div class="header-eyebrow">Indoor Simulator League · Season Recap · 2025</div>
+    <div class="header-title">Final<br><span>Standings</span></div>
+    <div class="header-meta">
+      <div class="meta-item">Format <strong>Stroke Net</strong></div>
+      <div class="meta-item">Weeks <strong>2 – 8</strong></div>
+      <div class="meta-item">Venue <strong>KOHR Golf Center</strong></div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <div class="disclaimer">
+    <strong>A note on scoring:</strong> This leaderboard shows two views — the <strong>Official (Points)</strong> standings pulled directly from Trackman, and a <strong>Stroke Net</strong> view compiled from each week's individual scorecards. Since some scores had to be manually entered along the way, there are minor discrepancies between the two. The Official standings are what count for the final result.
+  </div>
+
+  <div class="tabs-wrap">
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('pts')"><span class="crown">🏆</span> Official (Points)</button>
+      <button class="tab-btn" onclick="switchTab('stroke')">⛳ Stroke Net</button>
+    </div>
+
+    <!-- POINTS TAB -->
+    <div class="tab-pane active" id="tab-pts">
+      <div class="podium-section">
+        <div class="section-label">Top Finishers — Official Points</div>
+        <div class="podium" id="podium-pts"></div>
+      </div>
+      <div class="table-section">
+        <div class="section-label">Full Leaderboard · Trackman points accumulated over 7 weeks · Tap a player to view breakdown</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th style="width:36px"></th>
+              <th>Player</th>
+              <th class="r hide-mob" style="width:40px">W2</th>
+              <th class="r hide-mob" style="width:40px">W3</th>
+              <th class="r hide-mob" style="width:40px">W4</th>
+              <th class="r hide-mob" style="width:40px">W5</th>
+              <th class="r hide-mob" style="width:40px">W6</th>
+              <th class="r hide-mob" style="width:40px">W7</th>
+              <th class="r hide-mob" style="width:40px">W8</th>
+              <th class="r" style="width:60px">Points</th>
+              <th class="r hide-mob" style="width:46px">Rnds</th>
+              <th style="width:22px"></th>
+            </tr></thead>
+            <tbody id="tbody-pts"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- STROKE NET TAB -->
+    <div class="tab-pane" id="tab-stroke">
+      <div class="podium-section">
+        <div class="section-label">Top Finishers — Stroke Net (lower is better)</div>
+        <div class="podium" id="podium-stroke"></div>
+      </div>
+      <div class="table-section">
+        <div class="section-label">Full Leaderboard · Combined stroke net scores · Ranked by rounds played then total · Tap a player to view breakdown</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th style="width:36px"></th>
+              <th>Player</th>
+              <th class="r hide-mob" style="width:40px">W2</th>
+              <th class="r hide-mob" style="width:40px">W3</th>
+              <th class="r hide-mob" style="width:40px">W4</th>
+              <th class="r hide-mob" style="width:40px">W5</th>
+              <th class="r hide-mob" style="width:40px">W6</th>
+              <th class="r hide-mob" style="width:40px">W7</th>
+              <th class="r hide-mob" style="width:40px">W8</th>
+              <th class="r" style="width:56px">Total</th>
+              <th class="r hide-mob" style="width:42px">Avg</th>
+              <th class="r hide-mob" style="width:46px">Rnds</th>
+              <th style="width:22px"></th>
+            </tr></thead>
+            <tbody id="tbody-stroke"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="courses-section">
+    <div class="section-label">Schedule</div>
+    <div class="courses-grid" id="courses-grid"></div>
+  </div>
+
+</main>
+
+<footer>KOHR Golf Center &nbsp;·&nbsp; Indoor Simulator League &nbsp;·&nbsp; Season Complete</footer>
+
+<script>
+const courses = [
+  {wk:'Week 2', name:'Liberty National GC'},
+  {wk:'Week 3', name:'Pinehurst No. 2'},
+  {wk:'Week 4', name:'PGA National'},
+  {wk:'Week 5', name:'The Concession GC'},
+  {wk:'Week 6', name:'Bethpage Black'},
+  {wk:'Week 7', name:'Quail Hollow Club'},
+  {wk:'Week 8', name:'Bandon Dunes', final:true},
+];
+
+const ptsPlayers = [
+  {name:"soobrex1",      scores:[77,147,127,141,101,147,124], total:864},
+  {name:"JakeMontemagni",scores:[100,95,85,147,141,154,105],  total:827},
+  {name:"cdefronzo",     scores:[64,118,63,65,177,118,131],   total:736},
+  {name:"Nathan Boroyan",scores:[64,41,113,128,111,131,41],   total:629},
+  {name:"dadtimejamtime",scores:[null,85,141,63,95,90,136],   total:610},
+  {name:"willyheaters",  scores:[null,100,88,118,98,90,null], total:494},
+  {name:"Mark Smith 85", scores:[100,64,88,null,72,100,64],   total:488},
+  {name:"Ed OB",         scores:[47,95,131,31,18,null,118],   total:440},
+  {name:"theShad",       scores:[null,124,null,63,83,36,101], total:407},
+  {name:"YermBless",     scores:[77,27,131,72,36,null,null],  total:343},
+  {name:"arthur217",     scores:[null,null,null,121,null,64,88], total:273},
+  {name:"Alaina O",      scores:[54,60,null,77,null,null,null],  total:191},
+  {name:"kellygirl",     scores:[null,null,null,null,64,null,null], total:64},
+  {name:"Harrison Quandt",scores:[null,null,null,null,null,null,27], total:27},
+  {name:"JaneR95",       scores:[null,null,null,null,24,null,null],  total:24},
+  {name:"Sam Hadfield",  scores:[null,null,null,null,null,null,21],  total:21},
+  {name:"Cal Carroll",   scores:[null,null,null,null,null,null,18],  total:18},
+];
+ptsPlayers.forEach(p => {
+  p.played = p.scores.filter(s=>s!==null).length;
+  p.best = Math.max(...p.scores.filter(s=>s!==null));
+});
+
+const strokePlayers = [
+  {name:"JakeMontemagni",scores:[39,37,30,30,42,42,41], total:261},
+  {name:"soobrex1",      scores:[40,34,37,38,31,49,34], total:263},
+  {name:"dadtimejamtime",scores:[46,36,39,35,42,33,36], total:267},
+  {name:"cdefronzo",     scores:[41,48,48,34,36,34,37], total:278},
+  {name:"Nathan Boroyan",scores:[41,40,37,38,42,42,39], total:279},
+  {name:"Mark Smith 85", scores:[37,39,null,44,44,39,29], total:232},
+  {name:"Ed OB",         scores:[41,36,42,54,null,42,32], total:247},
+  {name:"theShad",       scores:[32,null,43,44,44,40,49], total:252},
+  {name:"willyheaters",  scores:[32,38,37,48,44,null,null], total:199},
+  {name:"YermBless",     scores:[42,42,38,44,null,null,null], total:166},
+  {name:"arthur217",     scores:[null,null,61,null,41,41,28], total:171},
+  {name:"Alaina O",      scores:[43,null,35,null,null,null,null], total:78},
+  {name:"Harrison Quandt",scores:[null,null,null,null,null,43,28], total:71},
+  {name:"Sam Hadfield",  scores:[null,null,null,null,null,51,46], total:97},
+  {name:"Cal Carroll",   scores:[null,null,null,null,null,59,54], total:113},
+  {name:"kellygirl",     scores:[null,null,null,35,null,null,null], total:35},
+  {name:"JaneR95",       scores:[null,null,null,47,null,null,null], total:47},
+];
+strokePlayers.forEach(p => {
+  p.played = p.scores.filter(s=>s!==null).length;
+  const valid = p.scores.filter(s=>s!==null);
+  p.avg = valid.length ? (p.total/valid.length) : null;
+  p.best = Math.min(...valid);
+});
+
+// Courses grid
+const cg = document.getElementById('courses-grid');
+courses.forEach(c => {
+  cg.innerHTML += `<div class="course-card${c.final?' final-week':''}"><div class="course-wk">${c.wk}${c.final?' · Final':''}</div><div class="course-name">${c.name}</div></div>`;
+});
+
+function buildPodium(players, elId, isPoints) {
+  const el = document.getElementById(elId);
+  const top3 = players.slice(0,3);
+  const order = [top3[1], top3[0], top3[2]];
+  const cls = ['second','first','third'];
+  const lbl = ['2nd Place','Champion','3rd Place'];
+  order.forEach((p,i) => {
+    const isFirst = i===1;
+    const val = isPoints ? p.total + ' pts' : p.total + ' total';
+    el.innerHTML += `<div class="podium-card ${cls[i]}">
+      ${isFirst ? '<div class="winner-badge">🏆 League Champion</div>' : ''}
+      <div class="podium-place">${lbl[i]}</div>
+      <div class="podium-name">${p.name}</div>
+      <div class="podium-score">${p.total}</div>
+      <div class="podium-detail">${p.played} rounds &middot; ${val}</div>
+    </div>`;
+  });
+}
+buildPodium(ptsPlayers, 'podium-pts', true);
+buildPodium(strokePlayers, 'podium-stroke', false);
+
+function buildTable(players, tbodyId, isPoints) {
+  const tbody = document.getElementById(tbodyId);
+  const prefix = isPoints ? 'pts' : 'str';
+  players.forEach((p,i) => {
+    const rank = i+1;
+    const rankHtml = rank===1 ? '<span class="medal m1">1</span>' : rank===2 ? '<span class="medal m2">2</span>' : rank===3 ? '<span class="medal m3">3</span>' : `<span class="rank-plain">${rank}</span>`;
+    const wkCells = p.scores.map(s => s!==null ? `<td class="r hide-mob">${s}</td>` : `<td class="r dim hide-mob">—</td>`).join('');
+    const pid = `${prefix}-p${i}`;
+    const extraCol = isPoints ? '' : `<td class="r hide-mob" style="font-family:'DM Mono',monospace;font-size:11px;color:var(--mid-gray)">${p.avg!==null?p.avg.toFixed(1):'—'}</td>`;
+    tbody.innerHTML += `
+      <tr class="data-row${rank===1?' winner-row':''}" onclick="togglePanel('${pid}')">
+        <td>${rankHtml}</td>
+        <td class="player-name">${p.name}</td>
+        ${wkCells}
+        <td class="r"><span class="total-big">${p.total}</span></td>
+        ${extraCol}
+        <td class="r hide-mob"><span class="rnds-badge">${p.played}/7</span></td>
+        <td><span class="chevron">›</span></td>
+      </tr>
+      <tr class="panel-row" id="${pid}">
+        <td colspan="13" style="padding:0">
+          <div class="panel-inner">
+            <div class="panel-heading">${p.name} &mdash; ${isPoints ? 'Points' : 'Scores'} by Round</div>
+            <div class="rounds-grid">
+              ${p.scores.map((s,wi) => {
+                const isBest = s!==null && s===p.best;
+                const dnp = s===null;
+                return `<div class="round-card${isBest?' best-round':''}${dnp?' no-play':''}">
+                  <div class="round-course">${courses[wi].name}</div>
+                  <div class="round-num">${s!==null?s:'—'}</div>
+                  <div class="round-wk">${courses[wi].wk}</div>
+                  ${isBest?`<div class="best-tag">${isPoints?'Best Round':'Best Round'}</div>`:''}
+                  ${dnp?'<div class="dnp">Did not play</div>':''}
+                </div>`;
+              }).join('')}
+            </div>
+            ${isPoints ? '<div class="panel-note">Points awarded by Trackman based on finishing position each week. Higher = better.</div>' : '<div class="panel-note">Stroke net scores — lower is better. Some scores manually entered; minor variances may apply.</div>'}
+          </div>
+        </td>
+      </tr>`;
+  });
+}
+buildTable(ptsPlayers, 'tbody-pts', true);
+buildTable(strokePlayers, 'tbody-stroke', false);
+
+function togglePanel(pid) {
+  const panel = document.getElementById(pid);
+  const isOpen = panel.classList.contains('open');
+  document.querySelectorAll('.panel-row.open').forEach(r => r.classList.remove('open'));
+  if (!isOpen) panel.classList.add('open');
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    if((tab==='pts'&&i===0)||(tab==='stroke'&&i===1)) b.classList.add('active');
+  });
+  document.querySelectorAll('.panel-row.open').forEach(r => r.classList.remove('open'));
+}
+</script>
+</body>
+</html>
